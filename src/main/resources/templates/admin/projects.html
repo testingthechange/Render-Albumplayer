@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Projects</title>
+</head>
+<body>
+    <h1 th:text="'Projects for ' + ${producer.name}"></h1>
+    <p><a th:href="@{'/admin/producer/' + ${producer.id} + '/create-project'}">+ Add Project</a></p>
+
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Start Date</th>
+            <th>Magic Link</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="proj : ${producer.projects}">
+            <td th:text="${proj.id}"></td>
+            <td th:text="${proj.title}"></td>
+            <td th:text="${proj.startDate}"></td>
+            <td>
+                <span th:text="${proj.magicLink != null ? proj.magicLink : 'No link yet'}"></span>
+            </td>
+            <td>
+                <form th:action="@{'/admin/producer/' + ${producer.id} + '/project/' + ${proj.id} + '/generate-link'}"
+                      method="post" style="display:inline;">
+                    <button type="submit">Generate Link</button>
+                </form>
+                <form th:action="@{'/admin/producer/' + ${producer.id} + '/project/' + ${proj.id} + '/send-link'}"
+                      method="post" style="display:inline;">
+                    <button type="submit">Send</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <div th:if="${#lists.isEmpty(producer.projects)}">
+        <p>No projects yet.</p>
+    </div>
+
+    <p th:if="${message != null}" th:text="${message}"></p>
+</body>
+</html>

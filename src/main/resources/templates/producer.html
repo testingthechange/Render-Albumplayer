@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="'Producer ' + ${producerId} + ' - Album Player'">Producer Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { margin-bottom: 15px; }
+        table { border-collapse: collapse; width: 95%; margin-top: 15px; font-size: 0.9em; }
+        th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
+        th { background: #f5f5f5; }
+        .button-bar { margin-top: 20px; display: flex; gap: 15px; }
+        .button-bar button { padding: 8px 16px; }
+        .filename { font-size: 0.85em; color: #444; margin-top: 4px; }
+    </style>
+    <script>
+        let producerId;
+
+        // ✅ Load producerId from Thymeleaf
+        window.onload = function () {
+            producerId = document.getElementById("producerId").textContent.trim();
+            loadData();
+        }
+
+        function saveData() {
+            const songs = [];
+            for (let i = 1; i <= 9; i++) {
+                const fileLabel = document.getElementById("songFile" + i);
+                songs.push(fileLabel.textContent || "");
+            }
+
+            const bridges = [];
+            for (let i = 1; i <= 8; i++) {
+                const fileLabel = document.getElementById("bridgeFile" + i);
+                bridges.push(fileLabel.textContent || "");
+            }
+
+            const data = { songs: songs, bridges: bridges };
+            localStorage.setItem("producer_" + producerId, JSON.stringify(data));
+            alert("✅ Data saved for Producer " + producerId);
+        }
+
+        function resetData() {
+            localStorage.removeItem("producer_" + producerId);
+            alert("🔄 Data cleared for Producer " + producerId);
+            location.reload();
+        }
+
+        function previewData() {
+            const data = localStorage.getItem("producer_" + producerId);
+            if (data) {
+                alert("👀 Preview for Producer " + producerId + ":\n" + data);
+            } else {
+                alert("⚠️ No data saved yet for Producer " + producerId);
+            }
+        }
+
+        function handleSongUpload(index, input, labelId) {
+            if (input.files.length > 0) {
+                const file = input.files[0];
+                document.getElementById(labelId).textContent = file.name;
+            }
+        }
+
+        function handleBridgeUpload(index, input, labelId) {
+            if (input.files.length > 0) {
+                const file = input.files[0];
+                document.getElementById(labelId).textContent = file.name;
+            }
+        }
+
+        function loadData() {
+            const data = localStorage.getItem("producer_" + producerId);
+            if (!data) return;
+
+            const parsed = JSON.parse(data);
+
+            parsed.songs.forEach((name, i) => {
+                if (name) document.getElementById("songFile" + (i + 1)).textContent = name;
+            });
+
+            parsed.bridges.forEach((name, i) => {
+                if (name) document.getElementById("bridgeFile" + (i + 1)).textContent = name;
+            });
+        }
+    </script>
+</head>
+<body>
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <h1>Producer <span id="producerId" th:text="${producerId}">X</span> Page</h1>
+    <p>This is the personal production page for Producer <span th:text="${producerId}">X</span>.</p>
+
+    <!-- === Songs Section === -->
+    <h2>Songs</h2>
+    <table>
+        <thead>
+            <tr><th>#</th><th>Filename</th><th>Upload</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td><div id="songFile1" class="filename"></div></td><td><input type="file" onchange="handleSongUpload(0,this,'songFile1')"></td></tr>
+            <tr><td>2</td><td><div id="songFile2" class="filename"></div></td><td><input type="file" onchange="handleSongUpload(1,this,'songFile2')"></td></tr>
+            <tr><td>3</td><td><div id="songFile3" class="filename"></div></td><td><input type="file" onchange="handleSongUpload(2,this,'songFile3')"></td></tr>
+            <tr><td>4</td><td><div id="songFile4" class="filename"></div></td><td><input type="file" onchange="handleSongUpload(3,this,'songFile4')"></td></tr>
+            <tr><td>5</td><td><div id="songFile5" class="filename"></div></td><td><input type="file" onchange="handleSongUpload(4,this,'songFile5')"></td></tr>
+            <tr><td>6</td><td><div id="songFile6" class="filename"></div></td><td><input type="file" onchange="handleSongUpload(5,this,'songFile6')"></td></tr>
+            <tr><td>7</td><td><div id="songFile7" class="filename"></div></td><td><input type="file" onchange="handleSongUpload(6,this,'songFile7')"></td></tr>
+            <tr><td>8</td><td><div id="songFile8" class="filename"></div></td><td><input type="file" onchange="handleSongUpload(7,this,'songFile8')"></td></tr>
+            <tr><td>9*</td><td><div id="songFile9" class="filename"></div></td><td><input type="file" onchange="handleSongUpload(8,this,'songFile9')"></td></tr>
+        </tbody>
+    </table>
+
+    <!-- === Bridges Section === -->
+    <h2>Bridges</h2>
+    <table>
+        <thead>
+            <tr><th>From</th><th>To</th><th>Filename</th><th>Upload</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Song 1</td><td>Song 2</td><td><div id="bridgeFile1" class="filename"></div></td><td><input type="file" onchange="handleBridgeUpload(0,this,'bridgeFile1')"></td></tr>
+            <tr><td>Song 2</td><td>Song 3</td><td><div id="bridgeFile2" class="filename"></div></td><td><input type="file" onchange="handleBridgeUpload(1,this,'bridgeFile2')"></td></tr>
+            <tr><td>Song 3</td><td>Song 4</td><td><div id="bridgeFile3" class="filename"></div></td><td><input type="file" onchange="handleBridgeUpload(2,this,'bridgeFile3')"></td></tr>
+            <tr><td>Song 4</td><td>Song 5</td><td><div id="bridgeFile4" class="filename"></div></td><td><input type="file" onchange="handleBridgeUpload(3,this,'bridgeFile4')"></td></tr>
+            <tr><td>Song 5</td><td>Song 6</td><td><div id="bridgeFile5" class="filename"></div></td><td><input type="file" onchange="handleBridgeUpload(4,this,'bridgeFile5')"></td></tr>
+            <tr><td>Song 6</td><td>Song 7</td><td><div id="bridgeFile6" class="filename"></div></td><td><input type="file" onchange="handleBridgeUpload(5,this,'bridgeFile6')"></td></tr>
+            <tr><td>Song 7</td><td>Song 8</td><td><div id="bridgeFile7" class="filename"></div></td><td><input type="file" onchange="handleBridgeUpload(6,this,'bridgeFile7')"></td></tr>
+            <tr><td>Song 8</td><td>Song 9*</td><td><div id="bridgeFile8" class="filename"></div></td><td><input type="file" onchange="handleBridgeUpload(7,this,'bridgeFile8')"></td></tr>
+        </tbody>
+    </table>
+
+    <!-- === Actions === -->
+    <h2>Actions</h2>
+    <div class="button-bar">
+        <button onclick="saveData()">💾 Save</button>
+        <button onclick="resetData()">🔄 Reset</button>
+        <button onclick="previewData()">👀 Preview</button>
+    </div>
+</body>
+</html>
