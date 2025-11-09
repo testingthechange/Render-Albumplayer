@@ -1,0 +1,33 @@
+<section style="margin-top: 40px;">
+    <h2 style="margin-bottom: 10px;">Album Version – Track List</h2>
+    <p style="margin-top: 0; color: #777;">
+        These are the final album masters that will appear on the release.
+    </p>
+
+    <ol style="padding-left: 20px; line-height: 1.8;">
+        <li>Song 1 – Album Version</li>
+        <li>Song 2 – Album Version</li>
+        <li>Song 3 – Album Version</li>
+        <li>Song 4 – Album Version</li>
+        <li>Song 5 – Album Version</li>
+        <!-- Add more as needed -->
+    </ol>
+</section>
+
+<section style="margin-top: 40px;">
+    <h2 style="margin-bottom: 10px;">Transition / Bridge Version – Track List</h2>
+    <p style="margin-top: 0; color: #777;">
+        These are the transition / bridge versions used for blending into the next song.
+    </p>
+
+    <ol style="padding-left: 20px; line-height: 1.8;">
+        <li>Song 1 – Transition Bridge Version</li>
+        <li>Song 2 – Transition Bridge Version</li>
+        <li>Song 3 – Transition Bridge Version</li>
+        <li>Song 4 – Transition Bridge Version</li>
+        <li>Song 5 – Transition Bridge Version</li>
+        <!-- Add more as needed -->
+    </ol>
+</section>
+<!-- ===== End Album Worksheet Sections ===== -->
+
