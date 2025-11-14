@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Producer Package</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 24px;">
+  <h1>Producer Package (Beta)</h1>
+  <p id="welcome"></p>
+
+  <section style="margin-top:24px;">
+    <h2>Your Producer Tools</h2>
+    <ul>
+      <li>View and edit album structures</li>
+      <li>Configure chapters & bridges</li>
+      <li>Test shuffle vs default playback flows</li>
+    </ul>
+  </section>
+
+  <section style="margin-top:24px;">
+    <button onclick="logout()" style="padding:8px 16px; cursor:pointer;">
+      Log out
+    </button>
+  </section>
+
+  <script>
+    function ensureAuthenticated() {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        window.location.href = '/login.html';
+        return false;
+      }
+      return true;
+    }
+
+    function loadProducerView() {
+      if (!ensureAuthenticated()) return;
+      const email = localStorage.getItem('producerEmail') || 'producer';
+      const welcomeEl = document.getElementById('welcome');
+      welcomeEl.textContent = 'Welcome, ' + email + ' — your Producer package is ready.';
+    }
+
+    function logout() {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('producerEmail');
+      window.location.href = '/login.html';
+    }
+
+    loadProducerView();
+  </script>
+</body>
+</html>
