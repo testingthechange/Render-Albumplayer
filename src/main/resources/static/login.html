@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Magic Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 24px;">
+  <h1>Magic Link Login</h1>
+  <p>Enter your email to log in with Magic.</p>
+
+  <div style="margin-top:16px;">
+    <input
+      id="email"
+      type="email"
+      placeholder="you@example.com"
+      style="padding:8px; min-width:260px;"
+    />
+    <button
+      onclick="login()"
+      style="padding:8px 16px; margin-left:8px; cursor:pointer;"
+    >
+      Send Magic Link
+    </button>
+  </div>
+
+  <pre id="result" style="margin-top:24px; white-space:pre-wrap;"></pre>
+
+  <!-- Magic SDK from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/magic-sdk/dist/magic.js"></script>
+  <script>
+    // Your public (publishable) key - safe to be in frontend
+    const magic = new Magic('pk_live_A145517DFFE6BDA1');
+
+    async function login() {
+      const emailInput = document.getElementById('email');
+      const resultEl = document.getElementById('result');
+      const email = emailInput.value.trim();
+
+      if (!email) {
+        resultEl.textContent = 'Please enter an email address.';
+        return;
+      }
+
+      try {
+        resultEl.textContent = 'Sending magic link and logging in...';
+
+        // 1) Ask Magic to send the link + log in
+        await magic.auth.loginWithMagicLink({ email });
+
+        // 2) Get DID token from Magic
+        const didToken = await magic.user.getIdToken();
+
+        // 3) Send DID token to your Spring Boot backend
+        const response = await fetch('/auth/magic-login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + didToken
+          }
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error('Backend error: ' + text);
+        }
+
+        const data = await response.json();
+        resultEl.textContent = 'Backend response:\\n' + JSON.stringify(data, null, 2);
+      } catch (err) {
+        console.error(err);
+        resultEl.textContent = 'Error: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>

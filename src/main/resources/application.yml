@@ -1,0 +1,5 @@
+magic:
+  secret-key: ${MAGIC_SECRET_KEY}
+
+server:
+  port: ${PORT:8080}
