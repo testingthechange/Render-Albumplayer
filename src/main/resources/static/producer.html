@@ -2,288 +2,83 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Producer Package – Album Mini Site</title>
+  <title>Producer Package</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: #111827;
-      background: #f3f4f6;
+      background: #0f172a;
+      color: #f9fafb;
     }
-    .app-shell {
+    .shell {
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
     }
-    .app-header {
+    .bar {
+      padding: 10px 16px;
+      background: #020617;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 20px;
-      background: #111827;
-      color: #f9fafb;
+      font-size: 13px;
     }
-    .app-header-title {
-      font-size: 18px;
+    .bar-title {
       font-weight: 600;
+      font-size: 15px;
     }
-    .app-header-sub {
-      font-size: 12px;
+    .bar-sub {
+      font-size: 11px;
       opacity: 0.8;
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 13px;
-    }
-    .pill {
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(249,250,251,0.2);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-    }
     .btn {
-      padding: 6px 12px;
-      font-size: 13px;
+      padding: 5px 12px;
       border-radius: 999px;
       border: 1px solid #e5e7eb;
       background: #f9fafb;
+      color: #111827;
       cursor: pointer;
+      font-size: 11px;
     }
     .btn:hover {
       background: #e5e7eb;
     }
-    .app-main {
+    main {
       flex: 1;
-      display: grid;
-      grid-template-columns: minmax(0, 2.1fr) minmax(290px, 1fr);
-      gap: 16px;
-      padding: 16px;
+      padding: 20px;
     }
-    .card {
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(15,23,42,0.06);
-      padding: 16px 18px;
-    }
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-    }
-    .card h3 {
-      margin: 12px 0 4px;
-      font-size: 14px;
+    h1 {
+      margin-top: 0;
+      font-size: 20px;
     }
     .muted {
-      color: #6b7280;
-      font-size: 13px;
-    }
-    .album-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-      font-size: 12px;
-    }
-    .tag {
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: #eff6ff;
-      color: #1d4ed8;
-    }
-    .layout-grid {
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 10px;
-    }
-    .block {
-      padding: 10px;
-      border-radius: 12px;
-      background: #f9fafb;
-      border: 1px dashed #d1d5db;
-      font-size: 12px;
-    }
-    .block-title {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .block-meta {
-      font-size: 11px;
-      color: #6b7280;
-    }
-    .block-bridge {
-      background: #ecfdf5;
-      border-color: #6ee7b7;
-    }
-    .small-label {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .05em;
       color: #9ca3af;
-      margin-bottom: 4px;
-    }
-    .album-list {
-      margin-top: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      max-height: 260px;
-      overflow-y: auto;
-    }
-    .album-row {
-      padding: 8px 9px;
-      border-radius: 10px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-    .album-row-main {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .album-row-title {
       font-size: 13px;
-      font-weight: 600;
-    }
-    .album-row-meta {
-      font-size: 11px;
-      color: #6b7280;
-    }
-    .album-row-pill {
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: #eef2ff;
-      font-size: 11px;
-      color: #4338ca;
-      white-space: nowrap;
-    }
-    .form-row {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-bottom: 8px;
-      font-size: 12px;
-    }
-    .input {
-      padding: 6px 8px;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      font-size: 12px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .input:focus {
-      outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px rgba(37,99,235,0.15);
-    }
-    .mode-toggle {
-      display: flex;
-      gap: 6px;
-      font-size: 11px;
-    }
-    .mode-pill {
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      cursor: pointer;
-    }
-    .mode-pill.active {
-      background: #111827;
-      color: #f9fafb;
-      border-color: #111827;
-    }
-    @media (max-width: 780px) {
-      .app-main {
-        grid-template-columns: minmax(0, 1fr);
-      }
     }
   </style>
 </head>
 <body>
-<div class="app-shell">
-  <header class="app-header">
+<div class="shell">
+  <div class="bar">
     <div>
-      <div class="app-header-title">Album Player – Producer Package</div>
-      <div class="app-header-sub" id="welcome-sub">Preparing your workspace…</div>
+      <div class="bar-title">Producer Package – Beta</div>
+      <div class="bar-sub" id="bar-sub">Preparing your workspace…</div>
     </div>
-    <div class="header-right">
-      <span class="pill">Beta</span>
-      <button class="btn" onclick="logout()">Log out</button>
-    </div>
-  </header>
-
-  <main class="app-main">
-    <!-- Left: main workspace / mini-site view -->
-    <section class="card">
-      <div class="small-label">Current Album Layout</div>
-      <h2 id="album-title">No album selected</h2>
-      <div class="muted" id="album-artist">Select or add an album on the right to view its structure.</div>
-
-      <div class="album-meta" id="album-meta-tags" style="display:none;">
-        <span class="tag" id="tag-mode">Mode: Default</span>
-        <span class="tag" id="tag-duration">~0 min</span>
-      </div>
-
-      <h3 style="margin-top:18px;">Playback Structure</h3>
-      <div class="muted" id="structure-empty-text">You can define chapters & bridges once an album is selected.</div>
-      <div class="layout-grid" id="layout-grid" style="display:none;">
-        <!-- Dynamic chapter + bridge blocks -->
-      </div>
-    </section>
-
-    <!-- Right: album list + quick-create -->
-    <aside class="card">
-      <div class="small-label">Producer Console</div>
-      <h2>Your Albums</h2>
-      <div class="muted">Tap an album to load its mini site layout, or create a new one below.</div>
-
-      <div class="album-list" id="album-list"></div>
-
-      <hr style="margin:16px 0; border:none; border-top:1px solid #e5e7eb;" />
-
-      <h3>Create / Update Album</h3>
-      <div class="form-row">
-        <label>Album title</label>
-        <input id="input-title" class="input" placeholder="e.g. Night Drive – Vol. 1" />
-      </div>
-      <div class="form-row">
-        <label>Artist / Producer</label>
-        <input id="input-artist" class="input" placeholder="e.g. Joel / Shakas" />
-      </div>
-      <div class="form-row">
-        <label>Playback mode</label>
-        <div class="mode-toggle">
-          <div class="mode-pill active" data-mode="default" onclick="setMode(this)">Default</div>
-          <div class="mode-pill" data-mode="chaptered" onclick="setMode(this)">Chapters + Bridges</div>
-        </div>
-      </div>
-      <div class="form-row">
-        <label>Approx. runtime (minutes)</label>
-        <input id="input-duration" type="number" min="0" class="input" placeholder="e.g. 42" />
-      </div>
-      <button class="btn" style="width:100%; margin-top:4px;" onclick="saveAlbum()">
-        Save album to Producer package
-      </button>
-    </aside>
+    <button class="btn" onclick="logout()">Log out</button>
+  </div>
+  <main>
+    <h1>Producer Area</h1>
+    <p class="muted">
+      You reached this page after a successful Magic link login.
+      We can drop your real mini-site or package UI here later.
+    </p>
   </main>
 </div>
 
 <script>
-  const STORAGE_KEY = 'producerAlbums';
-  const EMAIL_KEY = 'producerEmail';
   const TOKEN_KEY = 'accessToken';
+  const EMAIL_KEY = 'producerEmail';
 
   function ensureAuthenticated() {
     const token = localStorage.getItem(TOKEN_KEY);
@@ -294,172 +89,9 @@
     return true;
   }
 
-  function loadAlbums() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) return [];
-      return parsed;
-    } catch (e) {
-      console.warn('Error reading albums from storage', e);
-      return [];
-    }
-  }
-
-  function storeAlbums(albums) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(albums));
-    } catch (e) {
-      console.warn('Error writing albums to storage', e);
-    }
-  }
-
-  function setMode(el) {
-    const pills = document.querySelectorAll('.mode-pill');
-    pills.forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-  }
-
-  function getSelectedMode() {
-    const active = document.querySelector('.mode-pill.active');
-    return active ? active.getAttribute('data-mode') : 'default';
-  }
-
-  function renderAlbumList() {
-    const listEl = document.getElementById('album-list');
-    listEl.innerHTML = '';
-    const albums = loadAlbums();
-
-    if (!albums.length) {
-      const empty = document.createElement('div');
-      empty.className = 'muted';
-      empty.style.marginTop = '10px';
-      empty.textContent = 'No albums yet. Add your first producer package below.';
-      listEl.appendChild(empty);
-      return;
-    }
-
-    albums.forEach((album, idx) => {
-      const row = document.createElement('div');
-      row.className = 'album-row';
-      row.onclick = () => showAlbum(idx);
-
-      const left = document.createElement('div');
-      left.className = 'album-row-main';
-
-      const title = document.createElement('div');
-      title.className = 'album-row-title';
-      title.textContent = album.title || 'Untitled album';
-
-      const meta = document.createElement('div');
-      meta.className = 'album-row-meta';
-      meta.textContent = (album.artist || 'Unknown') + ' • ' +
-                         (album.mode === 'chaptered' ? 'Chapters + Bridges' : 'Default');
-
-      left.appendChild(title);
-      left.appendChild(meta);
-
-      const pill = document.createElement('div');
-      pill.className = 'album-row-pill';
-      pill.textContent = (album.duration || 0) + ' min';
-
-      row.appendChild(left);
-      row.appendChild(pill);
-
-      listEl.appendChild(row);
-    });
-  }
-
-  function showAlbum(index) {
-    const albums = loadAlbums();
-    const album = albums[index];
-    if (!album) return;
-
-    document.getElementById('album-title').textContent = album.title || 'Untitled album';
-    document.getElementById('album-artist').textContent =
-      (album.artist || 'Unknown producer') + ' • ' +
-      (album.mode === 'chaptered' ? 'Chapters & bridges enabled' : 'Default continuous playback');
-
-    const tags = document.getElementById('album-meta-tags');
-    const tagMode = document.getElementById('tag-mode');
-    const tagDuration = document.getElementById('tag-duration');
-
-    tagMode.textContent = 'Mode: ' + (album.mode === 'chaptered' ? 'Chapters + Bridges' : 'Default');
-    tagDuration.textContent = '~' + (album.duration || 0) + ' min';
-    tags.style.display = 'flex';
-
-    // Update mock layout
-    const grid = document.getElementById('layout-grid');
-    const emptyText = document.getElementById('structure-empty-text');
-    grid.innerHTML = '';
-
-    if (album.mode === 'chaptered') {
-      emptyText.style.display = 'none';
-      grid.style.display = 'grid';
-
-      const chapters = [
-        { title: 'Intro / Theme', meta: 'Track 1–2 • sets the tone' },
-        { title: 'Chapter A – Build', meta: 'Track 3–5 • narrative build' },
-        { title: 'Bridge – Shuffle Safe Zone', meta: 'Auto-bridge into any Chapter B track', bridge: true },
-        { title: 'Chapter B – Peak', meta: 'Track 6–8 • high energy' },
-        { title: 'Outro', meta: 'Track 9 • cooldown / credits' }
-      ];
-
-      chapters.forEach(c => {
-        const block = document.createElement('div');
-        block.className = 'block' + (c.bridge ? ' block-bridge' : '');
-
-        const titleEl = document.createElement('div');
-        titleEl.className = 'block-title';
-        titleEl.textContent = c.title;
-
-        const metaEl = document.createElement('div');
-        metaEl.className = 'block-meta';
-        metaEl.textContent = c.meta;
-
-        block.appendChild(titleEl);
-        block.appendChild(metaEl);
-        grid.appendChild(block);
-      });
-    } else {
-      emptyText.textContent = 'Default mode: album plays straight through, but you can still define bridges later.';
-      emptyText.style.display = 'block';
-      grid.style.display = 'none';
-    }
-  }
-
-  function saveAlbum() {
-    const title = document.getElementById('input-title').value.trim();
-    const artist = document.getElementById('input-artist').value.trim();
-    const durationRaw = document.getElementById('input-duration').value.trim();
-    const mode = getSelectedMode();
-
-    const duration = durationRaw ? parseInt(durationRaw, 10) : 0;
-
-    const albums = loadAlbums();
-    const existingIndex = albums.findIndex(a => a.title === title && title !== '');
-
-    const payload = { title, artist, duration, mode };
-
-    if (existingIndex >= 0) {
-      albums[existingIndex] = payload;
-    } else {
-      albums.push(payload);
-    }
-
-    storeAlbums(albums);
-    renderAlbumList();
-
-    if (albums.length) {
-      showAlbum(albums.length - 1);
-    }
-  }
-
   function logout() {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(EMAIL_KEY);
-    localStorage.removeItem(STORAGE_KEY);
     window.location.href = '/login.html';
   }
 
@@ -467,15 +99,8 @@
     if (!ensureAuthenticated()) return;
 
     const email = localStorage.getItem(EMAIL_KEY) || 'producer';
-    const welcomeSub = document.getElementById('welcome-sub');
-    welcomeSub.textContent = 'Signed in as ' + email + ' · Producer package mini site';
-
-    renderAlbumList();
-
-    const albums = loadAlbums();
-    if (albums.length) {
-      showAlbum(0);
-    }
+    const barSub = document.getElementById('bar-sub');
+    barSub.textContent = 'Signed in as ' + email;
   }
 
   window.addEventListener('load', init);

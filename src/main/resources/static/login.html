@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Magic Login</title>
+  <title>Magic Login (Beta)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 24px;">
   <h1>Magic Link Login</h1>
-  <p>Enter your email to log in with Magic.</p>
+  <p>Enter your email to log in with Magic. After login, you'll be taken to the Producer package.</p>
 
-  <div style="margin-top:16px;">
+  <div id="form-area" style="margin-top:16px;">
     <input
       id="email"
       type="email"
@@ -17,7 +17,7 @@
       style="padding:8px; min-width:260px;"
     />
     <button
-      onclick="login()"
+      onclick="startMagicLogin()"
       style="padding:8px 16px; margin-left:8px; cursor:pointer;"
     >
       Send Magic Link
@@ -29,29 +29,18 @@
   <!-- Magic SDK from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/magic-sdk/dist/magic.js"></script>
   <script>
-    // Your public (publishable) key - safe to be in frontend
     const magic = new Magic('pk_live_A145517DFFE6BDA1');
 
-    async function login() {
-      const emailInput = document.getElementById('email');
+    async function completeLoginWithBackend() {
       const resultEl = document.getElementById('result');
-      const email = emailInput.value.trim();
-
-      if (!email) {
-        resultEl.textContent = 'Please enter an email address.';
-        return;
-      }
 
       try {
-        resultEl.textContent = 'Sending magic link and logging in...';
+        resultEl.textContent = 'Finishing login with server...';
 
-        // 1) Ask Magic to send the link + log in
-        await magic.auth.loginWithMagicLink({ email });
-
-        // 2) Get DID token from Magic
+        // 1) Get DID token from Magic
         const didToken = await magic.user.getIdToken();
 
-        // 3) Send DID token to your Spring Boot backend
+        // 2) Send DID token to Spring Boot backend
         const response = await fetch('/auth/magic-login', {
           method: 'POST',
           headers: {
@@ -66,12 +55,80 @@
         }
 
         const data = await response.json();
-        resultEl.textContent = 'Backend response:\\n' + JSON.stringify(data, null, 2);
+
+        // 3) Store access token + email
+        try {
+          localStorage.setItem('accessToken', data.accessToken || '');
+          localStorage.setItem('producerEmail', data.email || '');
+        } catch (e) {
+          console.warn('Could not store token in localStorage', e);
+        }
+
+        // 4) Redirect to Producer package
+        resultEl.textContent = 'Login complete. Redirecting to Producer package...';
+        window.location.href = '/producer.html';
       } catch (err) {
         console.error(err);
-        resultEl.textContent = 'Error: ' + err.message;
+        resultEl.textContent = 'Error completing login: ' + err.message;
       }
     }
+
+    async function startMagicLogin() {
+      const emailInput = document.getElementById('email');
+      const resultEl = document.getElementById('result');
+      const email = emailInput.value.trim();
+
+      if (!email) {
+        resultEl.textContent = 'Please enter an email address.';
+        return;
+      }
+
+      try {
+        resultEl.textContent = 'Sending magic link. Check your email...';
+
+        // This sends the email and sets up login with Magic.
+        await magic.auth.loginWithMagicLink({
+          email,
+          // force Magic to bring user back to this page after clicking email
+          redirectURI: window.location.origin + '/login.html'
+        });
+
+        // After this, user will:
+        // 1) go to email, click the Magic link
+        // 2) be redirected back to /login.html
+        // 3) initLoginCheck() will run and complete login.
+      } catch (err) {
+        console.error(err);
+        resultEl.textContent = 'Error sending magic link: ' + err.message;
+      }
+    }
+
+    async function initLoginCheck() {
+      const resultEl = document.getElementById('result');
+
+      try {
+        resultEl.textContent = 'Checking login status...';
+
+        const isLoggedIn = await magic.user.isLoggedIn();
+
+        if (isLoggedIn) {
+          // User clicked the email link and Magic considers them logged in.
+          resultEl.textContent = 'You are already authenticated. Completing login...';
+          const formArea = document.getElementById('form-area');
+          if (formArea) formArea.style.display = 'none';
+
+          await completeLoginWithBackend();
+        } else {
+          // Not logged in yet – show email form
+          resultEl.textContent = '';
+        }
+      } catch (err) {
+        console.error(err);
+        resultEl.textContent = 'Error checking login status: ' + err.message;
+      }
+    }
+
+    window.addEventListener('load', initLoginCheck);
   </script>
 </body>
 </html>
